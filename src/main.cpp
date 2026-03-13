@@ -14,7 +14,7 @@ const GFXfont *font = &SFNSMono8pt7b;
     __VA_ARGS__;                                                               \
   }
 
-void draw_header() {
+void drawHeader() {
   display.setFont();
   const int pad = 10;
   display.setCursor(10, pad / 2 + 2);
@@ -43,15 +43,15 @@ struct State {
 State state = {SCREEN_HOME, 0, 0};
 
 
-void switch_screen(Screen next);
+void switchScreen(Screen next);
 void dispatch(Action action);
 
-void screen_home(Action action) {
+void screenHome(Action action) {
   switch (action) {
     case PRESS_DOUBLE:
       switch (state.cursor) {
-        case 0: switch_screen(SCREEN_A); return;
-        case 1: switch_screen(SCREEN_B); return;
+        case 0: switchScreen(SCREEN_A); return;
+        case 1: switchScreen(SCREEN_B); return;
       }
     case PRESS_SINGLE:
       state.cursor = (state.cursor + 1) % state.menu_count;
@@ -72,10 +72,10 @@ void screen_home(Action action) {
   );
 }
 
-void screen_a(Action action) {
+void screenA(Action action) {
   switch (action) {
     case PRESS_TRIPLE:
-      switch_screen(SCREEN_HOME);
+      switchScreen(SCREEN_HOME);
       return;
     // ignored:
     case PRESS_SINGLE:
@@ -88,10 +88,10 @@ void screen_a(Action action) {
     display.println("Hi from screen A");
   );
 }
-void screen_b(Action action) {
+void screenB(Action action) {
   switch (action) {
     case PRESS_TRIPLE:
-      switch_screen(SCREEN_HOME);
+      switchScreen(SCREEN_HOME);
       return;
     // ignored:
     case PRESS_SINGLE:
@@ -108,13 +108,13 @@ void screen_b(Action action) {
 
 void dispatch(Action action) {
   switch (state.screen) {
-    case SCREEN_HOME:  screen_home(action);  break;
-    case SCREEN_A:     screen_a(action);     break;
-    case SCREEN_B:     screen_b(action);     break;
+    case SCREEN_HOME:  screenHome(action);  break;
+    case SCREEN_A:     screenA(action);     break;
+    case SCREEN_B:     screenB(action);     break;
   }
 }
 
-void switch_screen(Screen next) {
+void switchScreen(Screen next) {
   dispatch(EXIT_SCREEN);
   state.screen = next;
   state.cursor = 0;
@@ -123,6 +123,7 @@ void switch_screen(Screen next) {
 }
 
 
+// for developing only
 void checkSerialInput() {
   if (!Serial.available()) {
     return;
